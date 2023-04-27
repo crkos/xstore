@@ -24,7 +24,8 @@ const Cliente = sequelize.define('Cliente', {
     correo: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false
+        allowNull: false,
+        isEmail: true
     },
     contrasena: {
         type: DataTypes.STRING,

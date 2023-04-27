@@ -33,7 +33,8 @@ const Personal = sequelize.define('Personal', {
     correo_electronico: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        isEmail: true
     },
     turno: {
         type: DataTypes.ENUM('Matutino', 'Vespertino'),

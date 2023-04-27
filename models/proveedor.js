@@ -23,7 +23,8 @@ const Proveedor = sequelize.define('Proveedor', {
     },
     correo: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        isEmail: true
     },
     rfc: {
         type: DataTypes.STRING,
