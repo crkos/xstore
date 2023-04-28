@@ -3,9 +3,9 @@ const sequelize = require('../db/db');
 
 const Sucursal = sequelize.define('Sucursal', {
     clave_sucursal: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
         allowNull: false
     },
     nombre_sucursal: {

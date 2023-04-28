@@ -6,9 +6,9 @@ const Proveedor = require('./proveedor');
 
 const Producto = sequelize.define('Producto', {
    clave_producto: {
-        type: DataTypes.INTEGER,
+       type: DataTypes.UUID,
+       defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
         allowNull: false
    },
     nombre_producto: {

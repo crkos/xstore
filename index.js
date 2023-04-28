@@ -1,6 +1,7 @@
 const express = require('express');
 require('express-async-errors');
 require('dotenv').config();
+const personalRouter = require('./routes/personal');
 
 const morgan = require('morgan');
 const { errorHandler } = require('./middlewares/error');
@@ -23,6 +24,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
+
+app.use('/api/v1/personal', personalRouter);
 app.use('/*', handleNotFound);
 
 app.use(errorHandler);

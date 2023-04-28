@@ -3,14 +3,15 @@ const sequelize = require('../db/db');
 
 const Funcion = sequelize.define('funcion', {
     clave_funcion: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
         allowNull: false
     },
     funcion: {
-        type: DataTypes.ENUM('Administrador', 'Gerente', 'Cajero', 'Vendedor'),
-        allowNull: false
+        type: DataTypes.ENUM('Administrador', 'Gerente', 'Cajero', 'Vendedor', 'Usuario'),
+        allowNull: false,
+        unique: true
     }
 }, {
     tableName: 'Funcion',

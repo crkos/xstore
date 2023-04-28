@@ -3,9 +3,9 @@ const { DataTypes } = require('sequelize');
 
 const Departamento = sequelize.define('Departamento', {
     clave_departamento: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
         allowNull: false
     },
     nombre_departamento: {

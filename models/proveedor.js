@@ -3,9 +3,9 @@ const { DataTypes } = require('sequelize');
 
 const Proveedor = sequelize.define('Proveedor', {
     clave_proveedor: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
-        autoIncrement: true,
         allowNull: false
     },
     nombre_proveedor: {
@@ -29,7 +29,8 @@ const Proveedor = sequelize.define('Proveedor', {
     rfc: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        is: /^[A-ZÑ&]{3,4}\d{6}[A-V1-9][0-9A-Z]{2}[0-9]?$/
     }
 }, {
     tableName: 'Proveedor',
