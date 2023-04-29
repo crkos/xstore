@@ -4,6 +4,8 @@ require('dotenv').config();
 const personalRouter = require('./routes/personal');
 const funcionRouter = require('./routes/funcion');
 const SucursalRouter = require('./routes/sucursal');
+const proveedorRouter = require('./routes/proveedor');
+const departamentoRouter = require('./routes/departamento');
 
 const morgan = require('morgan');
 const { errorHandler } = require('./middlewares/error');
@@ -30,6 +32,8 @@ app.use(cors());
 app.use('/api/v1/personal', personalRouter);
 app.use('/api/v1/funcion', funcionRouter);
 app.use('/api/v1/sucursal', SucursalRouter);
+app.use('/api/v1/proveedor', proveedorRouter);
+app.use('/api/v1/departamento', departamentoRouter);
 
 app.use('/*', handleNotFound);
 
