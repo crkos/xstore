@@ -3,6 +3,7 @@ const { DataTypes } = require('sequelize');
 
 const Producto = require('./producto');
 const Cliente = require('./cliente');
+const VentaProducto = require('./ventaproducto');
 
 const Venta = sequelize.define('Venta', {
     clave_venta: {
@@ -28,7 +29,7 @@ Venta.belongsTo(Cliente, {onDelete: 'CASCADE', onUpdate: 'CASCADE', foreignKey: 
 Cliente.hasMany(Venta, { sourceKey: 'clave_cliente', foreignKey: 'clave_cliente', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
 
 
-Venta.belongsToMany(Producto, {through: 'Venta_Producto', foreignKey: 'clave_venta', sourceKey: 'clave_venta', onDelete: 'CASCADE', onUpdate: 'CASCADE', timestamps: false});
-Producto.belongsToMany(Venta, {through: 'Venta_Producto', foreignKey: 'clave_producto', sourceKey: 'clave_producto', onDelete: 'CASCADE', onUpdate: 'CASCADE', timestamps: false});
+Venta.belongsToMany(Producto, {through: VentaProducto, foreignKey: 'clave_venta', sourceKey: 'clave_venta', onDelete: 'CASCADE', onUpdate: 'CASCADE', timestamps: false});
+Producto.belongsToMany(Venta, {through: VentaProducto, foreignKey: 'clave_producto', sourceKey: 'clave_producto', onDelete: 'CASCADE', onUpdate: 'CASCADE', timestamps: false});
 
 module.exports = Venta;

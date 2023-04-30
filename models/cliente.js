@@ -1,6 +1,6 @@
 const sequelize = require('../db/db');
 const { DataTypes } = require('sequelize');
-const { hash } = require("bcrypt");
+const { hashSync, compareSync} = require("bcrypt");
 
 const Cliente = sequelize.define('Cliente', {
     clave_cliente: {
@@ -32,13 +32,17 @@ const Cliente = sequelize.define('Cliente', {
     contrasena: {
         type: DataTypes.STRING,
         allowNull: false,
-        async set(value) {
-            this.setDataValue('contrasena', await hash(value, 10));
+        set(value) {
+            this.setDataValue('contrasena', hashSync(value, 10));
         }
     },
 }, {
     tableName: 'Cliente',
     timestamps: false,
 });
+
+Cliente.prototype.comparePassword = (password) => {
+    return compareSync(password, this.contrasena);
+}
 
 module.exports = Cliente;

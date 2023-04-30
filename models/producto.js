@@ -8,8 +8,8 @@ const Producto = sequelize.define('Producto', {
    clave_producto: {
        type: DataTypes.UUID,
        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-        allowNull: false
+       primaryKey: true,
+       allowNull: false
    },
     nombre_producto: {
         type: DataTypes.STRING,
@@ -27,6 +27,12 @@ const Producto = sequelize.define('Producto', {
     existencia: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    imagen_producto: {
+        type: DataTypes.STRING
+    },
+    imagen_id: {
+        type: DataTypes.STRING
     }
 }, {
     tableName: 'Producto',

@@ -6,6 +6,8 @@ const funcionRouter = require('./routes/funcion');
 const SucursalRouter = require('./routes/sucursal');
 const proveedorRouter = require('./routes/proveedor');
 const departamentoRouter = require('./routes/departamento');
+const productoRouter = require('./routes/producto');
+const clienteRouter = require('./routes/cliente');
 
 const morgan = require('morgan');
 const { errorHandler } = require('./middlewares/error');
@@ -22,6 +24,7 @@ const departamento = require('./models/departamento');
 const proveedor = require('./models/proveedor');
 const cliente = require('./models/cliente');
 const venta = require('./models/venta');
+const ventaProducto = require('./models/ventaproducto');
 ////////////////////////////
 
 app.use(express.json());
@@ -34,6 +37,8 @@ app.use('/api/v1/funcion', funcionRouter);
 app.use('/api/v1/sucursal', SucursalRouter);
 app.use('/api/v1/proveedor', proveedorRouter);
 app.use('/api/v1/departamento', departamentoRouter);
+app.use('/api/v1/producto', productoRouter);
+app.use('/api/v1/cliente', clienteRouter);
 
 app.use('/*', handleNotFound);
 

@@ -1,3 +1,5 @@
+//TODO Validar las rutas que faltan que son practica mente todas menos personal
+
 const { check, validationResult } = require("express-validator");
 
 
