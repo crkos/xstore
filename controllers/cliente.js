@@ -32,10 +32,34 @@ exports.updateClienteInfo = async (req, res) => {
 
     if (!modCliente) return sendError(res, 'No existe este cliente');
 
-    const oldCliente = await Cliente.findOne({ where: {
-        [Op.or] : [{rfc: rfc}, {correo: correo}, {telefono: telefono}],
-        [Op.ne] : {clave_cliente: clienteId}
-        } });
+    let oldCliente;
+
+    if(modCliente.rfc && modCliente.telefono) {
+        oldCliente = await Cliente.findOne({ where: {
+                [Op.or] : [{rfc: rfc}, {correo: correo}, {telefono: telefono}],
+                [Op.ne] : {clave_cliente: clienteId}
+            } });
+    } else if(modCliente.rfc && !modCliente.telefono) {
+        oldCliente = await Cliente.findOne({ where: {
+                [Op.or] : [{rfc: rfc}, {correo: correo}],
+                [Op.ne] : {clave_cliente: clienteId}
+            } });
+    } else if(!modCliente.rfc && modCliente.telefono) {
+        oldCliente = await Cliente.findOne({
+            where: {
+                [Op.or]: [{correo: correo}, {telefono: telefono}],
+                [Op.ne]: {clave_cliente: clienteId}
+            }
+        });
+    }else {
+        oldCliente = await Cliente.findOne({
+            where: {
+                rfc: rfc,
+                [Op.ne]: {clave_cliente: clienteId}
+            }
+        });
+    }
+
 
     if (oldCliente) return sendError(res, 'Ya hay un cliente con este RFC, correo o teléfono');
 
