@@ -1,6 +1,6 @@
 const sequelize = require('../db/db');
 const { DataTypes } = require('sequelize');
-const { hashSync, compareSync, compare} = require("bcrypt");
+const { hashSync, compare} = require("bcrypt");
 const Funcion = require('./funcion');
 
 const Cliente = sequelize.define('Cliente', {

@@ -2,7 +2,7 @@
 
 const { check, validationResult } = require("express-validator");
 
-
+//Válida toda la cadena de validaciones anteriores y que no tenga errores
 exports.validate = (req, res, next) => {
     const error = validationResult(req).array();
     if (error.length) {
@@ -12,6 +12,7 @@ exports.validate = (req, res, next) => {
     next();
 };
 
+//Válida los campos del personal del sistema
 exports.validatePersonal = [
     check('nombre', 'El nombre es obligatorio').not().isEmpty().isString(),
     check('apellidoPaterno', 'El apellido paterno es obligatorio').not().isEmpty().isString(),
