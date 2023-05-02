@@ -7,7 +7,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 });
 
 // Sincronizar el modelo y crear la tabla en la base de datos
-sequelize.sync({ force: true })
+sequelize.sync()
     .then(() => {
         console.log('Tablas creadas exitosamente');
     })

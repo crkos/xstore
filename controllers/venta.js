@@ -43,3 +43,31 @@ exports.createVenta = async (req, res) => {
 
     res.json({message: "Se ha creado la venta exitosamente"});
 }
+
+exports.deleteVenta = async (req, res) => {
+    const {ventaId} = req.params;
+
+    const venta = await Venta.findByPk(ventaId);
+
+    if(!venta) return sendError(res, 'No existe esta venta');
+
+    await venta.destroy();
+
+    res.json({message: "Se ha eliminado la venta exitosamente"});
+}
+
+exports.getVentas = async (req, res) => {
+    const ventas = await Venta.findAll();
+
+    res.json(ventas);
+}
+
+exports.getVenta = async (req, res) => {
+    const {ventaId} = req.params;
+
+    const venta = await Venta.findByPk(ventaId);
+
+    if(!venta) return sendError(res, 'No existe esta venta');
+
+    res.json(venta);
+}

@@ -1,14 +1,15 @@
 const { createProducto, updateProducto, deleteProducto, getProducto, getProductos } = require('../controllers/producto');
 const {uploadImage} = require("../middlewares/multer");
+const {isAuth, isAuthorized} = require("../middlewares/auth");
 
 
 const router = require('express').Router();
 
-router.post('/', uploadImage.single('imagen_producto'), createProducto);
+router.post('/',isAuth, isAuthorized, uploadImage.single('imagen_producto'), createProducto);
 
-router.patch('/:productoId', uploadImage.single('imagen_producto') ,updateProducto);
+router.patch('/:productoId',isAuth, isAuthorized, uploadImage.single('imagen_producto') ,updateProducto);
 
-router.delete('/:productoId', deleteProducto);
+router.delete('/:productoId',isAuth, isAuthorized, deleteProducto);
 
 router.get('/:productoId', getProducto);
 

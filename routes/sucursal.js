@@ -1,14 +1,15 @@
 const {createSucursal, deleteSucursal, updateSucursal, getSucursal, getSucursales} = require("../controllers/sucursal");
+const {isAuth, isAuthorized} = require("../middlewares/auth");
 const router = require('express').Router();
 
-router.post('/', createSucursal);
+router.post('/',isAuth, isAuthorized, createSucursal);
 
-router.delete('/:sucursalId', deleteSucursal);
+router.delete('/:sucursalId',isAuth, isAuthorized, deleteSucursal);
 
-router.patch('/:sucursalId', updateSucursal);
+router.patch('/:sucursalId',isAuth, isAuthorized, updateSucursal);
 
-router.get('/:sucursalId', getSucursal);
+router.get('/:sucursalId',isAuth, isAuthorized, getSucursal);
 
-router.get('/', getSucursales);
+router.get('/', isAuth, isAuthorized, getSucursales);
 
 module.exports = router;

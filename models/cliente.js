@@ -1,6 +1,7 @@
 const sequelize = require('../db/db');
 const { DataTypes } = require('sequelize');
-const { hashSync, compareSync} = require("bcrypt");
+const { hashSync, compareSync, compare} = require("bcrypt");
+const Funcion = require('./funcion');
 
 const Cliente = sequelize.define('Cliente', {
     clave_cliente: {
@@ -14,8 +15,7 @@ const Cliente = sequelize.define('Cliente', {
     },
     rfc: {
         type: DataTypes.STRING,
-        unique: true,
-        is: /^[A-ZÑ&]{3,4}\d{6}[A-V1-9][0-9A-Z]{2}[0-9]?$/
+        is: /^[A-ZÑ&]{3,4}\d{6}[A-V1-9][0-9A-Z]{2}[0-9]?$/,
     },
     direccion: {
         type: DataTypes.STRING,
@@ -41,8 +41,14 @@ const Cliente = sequelize.define('Cliente', {
     timestamps: false,
 });
 
-Cliente.prototype.comparePassword = (password) => {
-    return compareSync(password, this.contrasena);
+
+Cliente.prototype.comparePassword = async function(password) {
+    return await compare(password, this.contrasena);
 }
+
+//Relaciones de la tabla Cliente y funcion
+Cliente.belongsTo(Funcion, { foreignKey: 'clave_funcion', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Funcion.hasMany(Cliente, { sourceKey: 'clave_funcion', foreignKey: 'clave_funcion', onUpdate: 'CASCADE', onDelete: 'CASCADE' });
+
 
 module.exports = Cliente;

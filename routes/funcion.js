@@ -1,16 +1,17 @@
 const { createFuncion, deleteFuncion, updateFuncion, getFuncion, getFunciones } = require('../controllers/funcion');
+const {isAuth, isAuthorized} = require("../middlewares/auth");
 
 const router = require('express').Router();
 
-router.post('/', createFuncion);
+router.post('/',isAuth, isAuthorized, createFuncion);
 
-router.patch('/:funcionId', updateFuncion);
+router.patch('/:funcionId',isAuth, isAuthorized, updateFuncion);
 
-router.delete('/:funcionId', deleteFuncion);
+router.delete('/:funcionId',isAuth, isAuthorized, deleteFuncion);
 
-router.get('/:funcionId', getFuncion);
+router.get('/:funcionId',isAuth, isAuthorized, getFuncion);
 
-router.get('/', getFunciones);
+router.get('/',isAuth, isAuthorized, getFunciones);
 
 module.exports = router;
 

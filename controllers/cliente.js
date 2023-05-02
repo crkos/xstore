@@ -1,22 +1,26 @@
 const Cliente = require('../models/cliente');
-
+const Funcion = require("../models/funcion");
 const {sendError} = require('../utils/helper');
 const {Op} = require("sequelize");
 const {generateToken} = require("../utils/jwt");
 
 exports.createCliente = async (req, res) => {
-    const { correo, contrasena } = req.body;
+    const { correo, contrasena, nombre } = req.body;
 
     const oldCliente = await Cliente.findOne({ where: {correo: correo} });
 
     if (oldCliente) return sendError(res, 'Este usuario ya esta registrado');
 
+    const funcion = await Funcion.findOne({ where: {funcion: "Usuario"} });
+
     const nuevoCliente = await Cliente.create({
         correo: correo,
         contrasena: contrasena,
+        nombre: nombre,
+        clave_funcion: funcion.clave_funcion
     });
 
-    const {clave_cliente, nombre} = nuevoCliente;
+    const {clave_cliente} = nuevoCliente;
 
     const jwtToken = await generateToken(nuevoCliente.clave_cliente);
 
@@ -25,8 +29,12 @@ exports.createCliente = async (req, res) => {
 
 exports.updateClienteInfo = async (req, res) => {
     const { nombre, rfc, direccion, telefono, correo, contrasena } = req.body;
+    const {clave_cliente} = req.user;
 
     const {clienteId} = req.params;
+
+
+    if(clave_cliente !== clienteId) return sendError(res, 'No tienes permiso para modificar este cliente');
 
     const modCliente = await Cliente.findByPk(clienteId);
 
@@ -37,25 +45,25 @@ exports.updateClienteInfo = async (req, res) => {
     if(modCliente.rfc && modCliente.telefono) {
         oldCliente = await Cliente.findOne({ where: {
                 [Op.or] : [{rfc: rfc}, {correo: correo}, {telefono: telefono}],
-                [Op.ne] : {clave_cliente: clienteId}
+                "clave_cliente": { [Op.ne]: clienteId }
             } });
     } else if(modCliente.rfc && !modCliente.telefono) {
         oldCliente = await Cliente.findOne({ where: {
                 [Op.or] : [{rfc: rfc}, {correo: correo}],
-                [Op.ne] : {clave_cliente: clienteId}
+                "clave_cliente": { [Op.ne]: clienteId }
             } });
     } else if(!modCliente.rfc && modCliente.telefono) {
         oldCliente = await Cliente.findOne({
             where: {
                 [Op.or]: [{correo: correo}, {telefono: telefono}],
-                [Op.ne]: {clave_cliente: clienteId}
+                "clave_cliente": { [Op.ne]: clienteId }
             }
         });
     }else {
         oldCliente = await Cliente.findOne({
             where: {
-                rfc: rfc,
-                [Op.ne]: {clave_cliente: clienteId}
+                "rfc": rfc,
+                "clave_cliente": { [Op.ne]: clienteId }
             }
         });
     }
@@ -107,7 +115,7 @@ exports.getClientes = async (req, res) => {
 exports.loginCliente = async (req, res) => {
     const { correo, contrasena } = req.body;
 
-    const cliente = await Cliente.findOne({ where: {correo: correo} });
+    const cliente = await Cliente.findOne({ where: {correo: correo}, include: Funcion });
 
     const matched = await cliente.comparePassword(contrasena);
 
@@ -115,8 +123,10 @@ exports.loginCliente = async (req, res) => {
 
     const jwtToken = await generateToken(cliente.clave_cliente);
 
-    const {clave_cliente, nombre} = cliente;
+    const {clave_cliente, nombre, funcion} = cliente;
 
-    res.json({user: {clave_cliente, nombre}, token: jwtToken});
+    let role = funcion.funcion;
+
+    res.json({user: {clave_cliente, nombre, role}, token: jwtToken, message: "Se ha iniciado sesión exitosamente"});
 
 }

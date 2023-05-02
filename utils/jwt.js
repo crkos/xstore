@@ -11,7 +11,7 @@ const jwtPublicKey = path.resolve('') + '/keys-jwt/public-key.pem';
  */
 exports.generateToken = async (id) => {
     const payload = {
-        userId: id,
+        clave_cliente: id,
     };
     return await jwtSign(payload);
 };
