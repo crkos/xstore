@@ -117,6 +117,8 @@ exports.loginCliente = async (req, res) => {
 
     const cliente = await Cliente.findOne({ where: {correo: correo}, include: Funcion });
 
+    if(!cliente) return sendError(res, 'Correo o contraseña incorrectos');
+
     const matched = await cliente.comparePassword(contrasena);
 
     if (!matched) return sendError(res, 'Correo o contraseña incorrectos');
@@ -127,6 +129,6 @@ exports.loginCliente = async (req, res) => {
 
     let role = funcion.funcion;
 
-    res.json({user: {clave_cliente, nombre, role}, token: jwtToken, message: "Se ha iniciado sesión exitosamente"});
+    res.json({user: {clave_cliente, nombre, role, token: jwtToken}, message: "Se ha iniciado sesión exitosamente"});
 
 }

@@ -15,4 +15,10 @@ router.get('/',isAuth, getClientes);
 
 router.post('/login', loginCliente);
 
+router.get('/auth/is-auth', isAuth, (req, res) => {
+    const {user} = req;
+    res.json({user:{id: user.clave_cliente, nombre: user.nombre ,role: user.funcion.funcion, rfc: user.rfc}});
+});
+
+
 module.exports = router;

@@ -18,7 +18,6 @@ exports.isAuth = async (req, res, next) => {
     const decode = await verifyToken(jwtToken).catch(_ => sendError(res, 'Sesión Expirada, Vuelva a iniciar sesión'));
     if(!decode) return;
     const {clave_cliente} = decode;
-    console.log(decode)
     const user = await Cliente.findByPk(clave_cliente, {include: Funcion});
     if(!user) return sendError(res, 'Usuario no encontrado', 401);
 
@@ -38,8 +37,6 @@ exports.isAuthorized = (req, res, next) => {
     const { user } = req;
 
     const { funcion } = user;
-
-    console.log(user);
 
     if(funcion.funcion !== 'Admin') return sendError(res, "Acceso no autorizado");
 

@@ -15,6 +15,10 @@ const cors = require('cors');
 const { handleNotFound } = require('./utils/helper');
 const app = express();
 
+app.use(express.json());
+app.use(morgan("dev"));
+app.use(cors());
+
 //////////////////////////// Modelos de la base de datos
 const personal = require('./models/personal');
 const funcion = require('./models/funcion');
@@ -27,9 +31,6 @@ const venta = require('./models/venta');
 const ventaProducto = require('./models/ventaproducto');
 ////////////////////////////
 
-app.use(express.json());
-app.use(morgan("dev"));
-app.use(cors());
 
 
 app.use('/api/v1/personal', personalRouter);
