@@ -96,7 +96,7 @@ exports.deleteProducto = async (req, res) => {
 exports.getProductos = async (req, res) => {
     const productos = await Producto.findAll();
 
-    res.json(productos);
+    res.json({productos: productos});
 }
 
 exports.getProducto = async (req, res) => {
@@ -106,5 +106,5 @@ exports.getProducto = async (req, res) => {
 
     if(!producto) return sendError(res, 'No existe este producto');
 
-    res.json(producto);
+    res.json({producto: producto});
 }

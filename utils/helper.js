@@ -25,7 +25,7 @@ exports.sendError = (res, error, statusCode = 401) => {
  * @returns {Promise<{url: string, public_id: string}>} Objeto con la url y él, id público de la imagen
  */
 exports.uploadImageToCloud = async (file) => {
-    const {secure_url: url, public_id} = await cloudinary.uploader.upload(file, {gravity: "face", height: 500, width: 500, crop: "thumb"});
+    const {secure_url: url, public_id} = await cloudinary.uploader.upload(file, {});
 
     return { url , public_id };
 };

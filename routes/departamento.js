@@ -3,7 +3,7 @@ const {isAuth, isAuthorized} = require("../middlewares/auth");
 
 const router = require('express').Router();
 
-router.post('/', createDepartamento);
+router.post('/',isAuth, isAuthorized, createDepartamento);
 
 router.patch('/:departamentoId',isAuth, isAuthorized, updateDepartamento);
 

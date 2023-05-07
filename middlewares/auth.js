@@ -38,7 +38,7 @@ exports.isAuthorized = (req, res, next) => {
 
     const { funcion } = user;
 
-    if(funcion.funcion !== 'Admin') return sendError(res, "Acceso no autorizado");
+    if(funcion.funcion !== 'Administrador') return sendError(res, "Acceso no autorizado");
 
     next();
 }

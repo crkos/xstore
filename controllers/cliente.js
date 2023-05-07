@@ -5,7 +5,7 @@ const {Op} = require("sequelize");
 const {generateToken} = require("../utils/jwt");
 
 exports.createCliente = async (req, res) => {
-    const { correo, contrasena, nombre } = req.body;
+    const { correo, contrasena } = req.body;
 
     const oldCliente = await Cliente.findOne({ where: {correo: correo} });
 
@@ -16,15 +16,13 @@ exports.createCliente = async (req, res) => {
     const nuevoCliente = await Cliente.create({
         correo: correo,
         contrasena: contrasena,
-        nombre: nombre,
         clave_funcion: funcion.clave_funcion
     });
 
     const {clave_cliente} = nuevoCliente;
 
-    const jwtToken = await generateToken(nuevoCliente.clave_cliente);
 
-    res.json({user: {clave_cliente, nombre}, token: jwtToken ,message: "Se ha registrado exitosamente"});
+    res.json({user: { clave_cliente },message: "Se ha registrado exitosamente"});
 }
 
 exports.updateClienteInfo = async (req, res) => {
