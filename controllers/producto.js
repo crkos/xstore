@@ -1,4 +1,5 @@
 const Producto = require('../models/producto');
+const Departamento = require('../models/departamento');
 
 const {sendError, uploadImageToCloud} = require('../utils/helper');
 const cloudinary = require("../cloud");
@@ -94,7 +95,7 @@ exports.deleteProducto = async (req, res) => {
 }
 
 exports.getProductos = async (req, res) => {
-    const productos = await Producto.findAll();
+    const productos = await Producto.findAll({include: Departamento});
 
     res.json({productos: productos});
 }

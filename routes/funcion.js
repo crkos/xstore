@@ -4,7 +4,7 @@ const {isAuth, isAuthorized} = require("../middlewares/auth");
 //Estas rutas no tienen mucha utilidad, pero se dejan por si se necesitan en un futuro
 const router = require('express').Router();
 
-router.post('/',isAuth, createFuncion);
+router.post('/',isAuth, isAuthorized,createFuncion);
 
 router.patch('/:funcionId',isAuth, isAuthorized, updateFuncion);
 

@@ -16,6 +16,8 @@ exports.createVenta = async (req, res) => {
 
         const modProducto = await Producto.findByPk(clave_producto);
 
+        if(modProducto.existencia === 0) return sendError(res, 'No hay existencia de este producto');
+
         if (!modProducto) return sendError(res, 'No existe este producto');
 
         if(modProducto.existencia < cantidad) return sendError(res, 'No hay suficiente existencia de este producto');
@@ -38,6 +40,7 @@ exports.createVenta = async (req, res) => {
         await ventaProducto.create({
             clave_venta: nuevaVenta.clave_venta,
             clave_producto: producto.clave_producto,
+            cantidad_comprada: producto.cantidad,
         });
     }
 
@@ -59,7 +62,31 @@ exports.deleteVenta = async (req, res) => {
 exports.getVentas = async (req, res) => {
     const ventas = await Venta.findAll();
 
-    res.json(ventas);
+    res.json({ventas});
+}
+
+exports.getVentaFromUser = async (req, res) => {
+    const { clave_cliente } = req.user;
+
+    const ventas = await Venta.findAll({
+        where: {
+            clave_cliente: clave_cliente,
+        },
+        include: {
+            model: Producto,
+        }
+    });
+
+    const comprasTotales = await Venta.count({
+        where: { clave_cliente: clave_cliente }
+    })
+
+    const ventasTotales = {
+        ventas,
+        comprasTotales,
+    }
+
+    res.json({ventasTotales});
 }
 
 exports.getVenta = async (req, res) => {
@@ -69,5 +96,5 @@ exports.getVenta = async (req, res) => {
 
     if(!venta) return sendError(res, 'No existe esta venta');
 
-    res.json(venta);
+    res.json({venta});
 }

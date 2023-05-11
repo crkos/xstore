@@ -1,4 +1,6 @@
 const sequelize = require('../db/db');
+const Venta = require('./venta');
+const Producto = require('./producto');
 const { DataTypes } = require('sequelize');
 
 const ventaProducto = sequelize.define('ventaProducto', {
@@ -8,7 +10,7 @@ const ventaProducto = sequelize.define('ventaProducto', {
         primaryKey: true,
         allowNull: false,
         references: {
-            model: 'Venta',
+            model: Venta,
             key: 'clave_venta'
         }
     },
@@ -18,9 +20,13 @@ const ventaProducto = sequelize.define('ventaProducto', {
         primaryKey: true,
         allowNull: false,
         references: {
-            model: 'Producto',
+            model: Producto,
             key: 'clave_producto'
         }
+    },
+    cantidad_comprada: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     }
 }, {
     tableName: 'Venta_Producto',

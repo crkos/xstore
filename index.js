@@ -8,6 +8,7 @@ const proveedorRouter = require('./routes/proveedor');
 const departamentoRouter = require('./routes/departamento');
 const productoRouter = require('./routes/producto');
 const clienteRouter = require('./routes/cliente');
+const ventaRouter = require('./routes/venta');
 
 const morgan = require('morgan');
 const { errorHandler } = require('./middlewares/error');
@@ -40,6 +41,7 @@ app.use('/api/v1/proveedor', proveedorRouter);
 app.use('/api/v1/departamento', departamentoRouter);
 app.use('/api/v1/producto', productoRouter);
 app.use('/api/v1/cliente', clienteRouter);
+app.use('/api/v1/venta', ventaRouter);
 
 app.use('/*', handleNotFound);
 
