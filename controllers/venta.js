@@ -3,6 +3,7 @@ const Producto = require('../models/producto');
 const ventaProducto = require('../models/ventaproducto');
 
 const {sendError} = require('../utils/helper');
+const {Op} = require("sequelize");
 
 
 exports.createVenta = async (req, res) => {
@@ -79,7 +80,7 @@ exports.getVentaFromUser = async (req, res) => {
 
     const comprasTotales = await Venta.count({
         where: { clave_cliente: clave_cliente }
-    })
+    });
 
     const ventasTotales = {
         ventas,
@@ -97,4 +98,43 @@ exports.getVenta = async (req, res) => {
     if(!venta) return sendError(res, 'No existe esta venta');
 
     res.json({venta});
+}
+
+exports.searchVenta = async (req, res) => {
+    const {producto} = req.query;
+    const {clave_cliente} = req.user;
+
+    const ventas = await Venta.findAll({
+        include: {
+            model: Producto,
+            where: {
+                nombre_producto: {
+                    [Op.like]: `%${producto}%`,
+                },
+            }
+        },
+        where: {
+            clave_cliente: clave_cliente,
+        }
+    });
+
+    const comprasTotales = await Venta.count({
+        where: { clave_cliente: clave_cliente },
+        include: {
+            model: Producto,
+            where: {
+                nombre_producto: {
+                    [Op.like]: `%${producto}%`,
+                }
+            }
+        }
+    });
+
+    const ventasTotales = {
+        ventas,
+        comprasTotales,
+    }
+
+    res.json({ventasTotales});
+
 }

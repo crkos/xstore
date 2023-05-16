@@ -1,9 +1,9 @@
-const { createVenta, deleteVenta, getVentas, getVenta, getVentaFromUser} = require('../controllers/venta');
+const { createVenta, deleteVenta, getVentas, getVenta, getVentaFromUser, searchVenta} = require('../controllers/venta');
 const {isAuth, isAuthorized} = require("../middlewares/auth");
 
 const router = require('express').Router();
 
-router.post('/',isAuth, isAuthorized, createVenta);
+router.post('/',isAuth, createVenta);
 
 router.delete('/:ventaId',isAuth, isAuthorized, deleteVenta);
 
@@ -11,6 +11,8 @@ router.get('/',isAuth, isAuthorized, getVentas);
 
 router.get('/:ventaId',isAuth, isAuthorized, getVenta);
 
-router.get('/ventas/user',isAuth, isAuthorized, getVentaFromUser);
+router.get('/ventas/user',isAuth, getVentaFromUser);
+
+router.get('/search/venta/',isAuth, searchVenta);
 
 module.exports = router;

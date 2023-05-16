@@ -3,6 +3,7 @@ const Departamento = require('../models/departamento');
 
 const {sendError, uploadImageToCloud} = require('../utils/helper');
 const cloudinary = require("../cloud");
+const {Op} = require("sequelize");
 
 exports.createProducto = async (req, res) => {
     const { nombre_producto, descripcion, precio, existencia } = req.body;
@@ -108,4 +109,32 @@ exports.getProducto = async (req, res) => {
     if(!producto) return sendError(res, 'No existe este producto');
 
     res.json({producto: producto});
+}
+
+exports.searchProducto = async (req, res) => {
+    const { producto } = req.query;
+
+    const productos = await Producto.findAll({
+        where: {
+            nombre_producto: {
+                [Op.like]: `%${producto}%`
+            }
+        }
+    });
+
+    res.json({productos: productos});
+}
+
+exports.editCantidadProducto = async (req, res) => {
+    const {productoId, existencia} = req.query;
+
+    const producto = await Producto.findByPk(productoId);
+
+    if(!producto) return sendError(res, 'No existe este producto');
+
+    producto.existencia = existencia;
+
+    await producto.save();
+
+    res.json({message: "Se ha actualizado la cantidad del producto exitosamente"});
 }
