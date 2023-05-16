@@ -37,7 +37,7 @@ exports.createProducto = async (req, res) => {
 }
 
 exports.updateProducto = async (req, res) => {
-    const { nombre_producto, descripcion, precio, existencia } = req.body;
+    const { nombre_producto, descripcion, precio } = req.body;
     const { productoId } = req.params;
     const { departamentoId, proveedorId } = req.query;
     const { file } = req;
@@ -49,7 +49,6 @@ exports.updateProducto = async (req, res) => {
     modProducto.nombre_producto = nombre_producto;
     modProducto.descripcion = descripcion;
     modProducto.precio = precio;
-    modProducto.existencia = existencia;
     modProducto.clave_departamento = departamentoId;
     modProducto.clave_proveedor = proveedorId;
 
@@ -70,7 +69,7 @@ exports.updateProducto = async (req, res) => {
 
     await modProducto.save();
 
-    res.json({message: "Se ha actualizado el producto exitosamente"});
+    res.json({producto: modProducto, message: "Se ha actualizado el producto exitosamente"});
 
 }
 
