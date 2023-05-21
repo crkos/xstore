@@ -61,9 +61,17 @@ exports.deleteVenta = async (req, res) => {
 }
 
 exports.getVentas = async (req, res) => {
-    const ventas = await Venta.findAll();
+    const ventas = await Venta.findAll({
+        include: {
+            model: Producto,
+        }
+    });
 
-    res.json({ventas});
+    const ventasTotales = {
+        ventas
+    };
+
+    res.json({ventasTotales});
 }
 
 exports.getVentaFromUser = async (req, res) => {

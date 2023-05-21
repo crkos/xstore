@@ -26,7 +26,7 @@ exports.createPersonal = async (req, res) => {
         turno: turno,
         contrasena: contrasena,
         clave_sucursal: sucursal,
-        clave_funcion: funcion
+        clave_funcion: funcion,
     });
 
     res.json({message: "Se ha creado el personal exitosamente"});
@@ -125,6 +125,7 @@ exports.getAllPersonal = async (req, res) => {
             telefono: personal.telefono,
             correo_electronico: personal.correo_electronico,
             turno: personal.turno,
+            ano_ingreso: personal.ano_ingreso,
             sucursal: {
                 id: personal.Sucursal.clave_sucursal,
                 nombre: personal.Sucursal.nombre_sucursal,

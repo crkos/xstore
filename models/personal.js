@@ -60,6 +60,11 @@ const Personal = sequelize.define('Personal', {
         set(value) {
             this.setDataValue('contrasena', hashSync(value, 10));
         }
+    },
+    ano_ingreso: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: new Date()
     }
 }, {
     tableName: 'Personal',
