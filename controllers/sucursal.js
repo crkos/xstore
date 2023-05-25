@@ -1,5 +1,7 @@
 const Sucursal = require('../models/sucursal');
 const {sendError} = require("../utils/helper");
+const Producto = require("../models/producto");
+const {Op} = require("sequelize");
 
 exports.createSucursal = async (req, res) => {
     const {nombre_sucursal} = req.body;
@@ -59,4 +61,20 @@ exports.getSucursal = async (req, res) => {
     if(!sucursal) return sendError(res, 'No existe esta sucursal');
 
     res.json(sucursal);
+}
+
+exports.searchSucursal = async (req, res) => {
+    const {nombre_sucursal} = req.query;
+
+    const sucursal = await Sucursal.findAll({
+        where: {
+            nombre_sucursal: {
+                [Op.like]: `%${nombre_sucursal}%`
+            }
+        }
+    });
+
+
+
+    res.json({results: sucursal});
 }

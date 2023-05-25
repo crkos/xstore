@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
 const Funcion = require('./funcion');
 const Sucursal = require('./sucursal');
-const {hashSync} = require("bcrypt");
 
 const Personal = sequelize.define('Personal', {
     clave_personal: {
@@ -53,13 +52,6 @@ const Personal = sequelize.define('Personal', {
     turno: {
         type: DataTypes.ENUM('Matutino', 'Vespertino'),
         allowNull: false
-    },
-    contrasena: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        set(value) {
-            this.setDataValue('contrasena', hashSync(value, 10));
-        }
     },
     ano_ingreso: {
         type: DataTypes.DATE,

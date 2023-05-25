@@ -5,8 +5,8 @@ const {sendError} = require("../utils/helper");
 const {Op} = require("sequelize");
 
 exports.createPersonal = async (req, res) => {
-    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno, contrasena} = req.body;
-    const { sucursal, funcion } = req.query;
+    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno, sucursal, funcion} = req.body;
+
 
     const oldPersonal = await Personal.findOne({ where: {
         [Op.or]: [{curp: curp}, {rfc: rfc}, {correo_electronico: correo_electronico}]
@@ -24,7 +24,6 @@ exports.createPersonal = async (req, res) => {
         telefono: telefono,
         correo_electronico: correo_electronico,
         turno: turno,
-        contrasena: contrasena,
         clave_sucursal: sucursal,
         clave_funcion: funcion,
     });
@@ -34,7 +33,7 @@ exports.createPersonal = async (req, res) => {
 }
 
 exports.updatePersonal = async (req, res) => {
-    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno, contrasena} = req.body;
+    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno} = req.body;
     const { sucursal, funcion } = req.query;
 
     const {personalId} = req.params;
@@ -52,7 +51,6 @@ exports.updatePersonal = async (req, res) => {
     personal.telefono = telefono;
     personal.correo_electronico = correo_electronico;
     personal.turno = turno;
-    personal.contrasena = contrasena;
     personal.clave_sucursal = sucursal;
     personal.clave_funcion = funcion;
 

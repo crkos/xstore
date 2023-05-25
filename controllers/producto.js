@@ -6,11 +6,9 @@ const cloudinary = require("../cloud");
 const {Op} = require("sequelize");
 
 exports.createProducto = async (req, res) => {
-    const { nombre_producto, descripcion, precio, existencia } = req.body;
-    const { departamentoId, proveedorId } = req.query;
+    const { nombre_producto, descripcion, precio, existencia, departamentoId, proveedorId } = req.body;
     const { file } = req;
 
-    console.log(req.query);
 
     const oldProducto = await Producto.findOne({ where: {nombre_producto: nombre_producto} });
 
@@ -115,8 +113,13 @@ exports.searchProducto = async (req, res) => {
 
     const productos = await Producto.findAll({
         where: {
-            nombre_producto: {
-                [Op.like]: `%${producto}%`
+            [Op.or]: {
+                nombre_producto: {
+                    [Op.like]: `%${producto}%`,
+                },
+                clave_producto: {
+                    [Op.like]: `%${producto}%`,
+                }
             }
         }
     });

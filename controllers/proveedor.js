@@ -1,5 +1,6 @@
 const Proveedor = require('../models/proveedor');
 const {sendError} = require('../utils/helper');
+const {Op} = require("sequelize");
 
 exports.createProveedor = async (req, res) => {
     const {nombre_proveedor, direccion, rfc, telefono, correo, } = req.body;
@@ -67,4 +68,19 @@ exports.getProveedor = async (req, res) => {
 
     res.json(proveedor);
 
+}
+
+exports.searchProveedor = async (req, res) => {
+    const {search} = req.query;
+
+    const proveedores = await Proveedor.findAll({
+        where: {
+            [Op.or]: [
+                {nombre_proveedor: {[Op.like]: `%${search}%`}},
+                {rfc: {[Op.like]: `%${search}%`}},
+            ]
+        }
+    });
+
+    res.json({results: proveedores});
 }

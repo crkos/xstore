@@ -1,4 +1,4 @@
-const {createProveedor, deleteProveedor, getProveedor, getProveedores, updateProveedor} = require('../controllers/proveedor');
+const {createProveedor, deleteProveedor, getProveedor, getProveedores, updateProveedor, searchProveedor} = require('../controllers/proveedor');
 const {isAuth, isAuthorized} = require("../middlewares/auth");
 
 const router = require('express').Router();
@@ -12,5 +12,7 @@ router.delete('/:proveedorId',isAuth, isAuthorized, deleteProveedor);
 router.get('/:proveedorId',isAuth, isAuthorized, getProveedor);
 
 router.get('/',isAuth, isAuthorized, getProveedores);
+
+router.get('/proveedor/search',isAuth, isAuthorized, searchProveedor);
 
 module.exports = router;

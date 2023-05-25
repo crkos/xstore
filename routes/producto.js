@@ -5,7 +5,7 @@ const {isAuth, isAuthorized} = require("../middlewares/auth");
 
 const router = require('express').Router();
 
-router.post('/',isAuth, isAuthorized, uploadImage.single('imagen_producto'), createProducto);
+router.post('/',isAuth, isAuthorized, uploadImage.single('imagen_producto'),createProducto);
 
 router.patch('/:productoId',isAuth, isAuthorized, uploadImage.single('imagen_producto') ,updateProducto);
 

@@ -1,5 +1,6 @@
 const Departamento = require('../models/departamento');
 const {sendError} = require('../utils/helper');
+const {Op} = require("sequelize");
 
 exports.createDepartamento = async (req, res) => {
     const {nombre_departamento} = req.body;
@@ -58,4 +59,19 @@ exports.getDepartamento = async (req, res) => {
     if(!departamento) return sendError(res, 'No existe este departamento');
 
     res.json(departamento);
+}
+
+exports.searchDepartamento = async (req, res) => {
+    const {nombre_departamento} = req.query;
+
+    const departamentos = await Departamento.findAll({
+        where: {
+            nombre_departamento: {
+                [Op.like]: `%${nombre_departamento}%`
+            }
+        }
+    });
+
+    res.json({results: departamentos});
+
 }

@@ -1,6 +1,7 @@
 const Venta = require('../models/venta');
 const Producto = require('../models/producto');
 const ventaProducto = require('../models/ventaproducto');
+const Cliente = require('../models/cliente');
 
 const {sendError} = require('../utils/helper');
 const {Op} = require("sequelize");
@@ -61,11 +62,7 @@ exports.deleteVenta = async (req, res) => {
 }
 
 exports.getVentas = async (req, res) => {
-    const ventas = await Venta.findAll({
-        include: {
-            model: Producto,
-        }
-    });
+    const ventas = await Venta.findAll( { include: [ Producto, Cliente,]},);
 
     const ventasTotales = {
         ventas
