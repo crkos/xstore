@@ -6,7 +6,7 @@ const router = require('express').Router();
 
 router.post('/',isAuth, isAuthorized, validatePersonal, validate, createPersonal);
 
-router.patch('/:personalId',isAuth, isAuthorized, validatePersonal, validate, updatePersonal);
+router.patch('/:personalId' ,isAuth, isAuthorized, validatePersonal, validate, updatePersonal);
 
 router.delete('/:personalId',isAuth, isAuthorized, deletePersonal);
 

@@ -87,8 +87,8 @@ exports.getPersonal = async (req, res) => {
     const personal =  {
         id: user.clave_personal,
         nombre: user.nombre,
-        apellido_paterno: user.apellido_paterno,
-        apellido_materno: user.apellido_materno,
+        apellidoPaterno: user.apellido_paterno,
+        apellidoMaterno: user.apellido_materno,
         curp: user.curp,
         rfc: user.rfc,
         direccion: user.direccion,
