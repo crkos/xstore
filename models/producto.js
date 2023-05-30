@@ -3,7 +3,10 @@ const { DataTypes } = require('sequelize');
 
 const Departamento = require('./departamento');
 const Proveedor = require('./proveedor');
+const Sucursal = require('./sucursal');
 
+
+//Modelo de la tabla Producto en la base de datos
 const Producto = sequelize.define('Producto', {
    clave_producto: {
        type: DataTypes.UUID,
@@ -46,6 +49,9 @@ Departamento.hasMany(Producto, {sourceKey: 'clave_departamento', foreignKey: 'cl
 
 Producto.belongsTo(Proveedor, {onDelete: 'CASCADE', onUpdate: 'CASCADE', foreignKey: 'clave_proveedor'});
 Proveedor.hasMany(Producto, {sourceKey: 'clave_proveedor', foreignKey: 'clave_proveedor', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
+
+Producto.belongsTo(Sucursal, {onDelete: 'CASCADE', onUpdate: 'CASCADE', foreignKey: 'clave_sucursal'});
+Sucursal.hasMany(Producto, {sourceKey: 'clave_sucursal', foreignKey: 'clave_sucursal', onDelete: 'CASCADE', onUpdate: 'CASCADE'});
 
 
 module.exports = Producto;

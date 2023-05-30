@@ -3,6 +3,7 @@ const Venta = require('./venta');
 const Producto = require('./producto');
 const { DataTypes } = require('sequelize');
 
+//Modelo de la tabla Venta_Producto en la base de datos
 const ventaProducto = sequelize.define('ventaProducto', {
     clave_venta: {
         type: DataTypes.UUID,
@@ -27,6 +28,11 @@ const ventaProducto = sequelize.define('ventaProducto', {
     cantidad_comprada: {
         type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    estado_venta: {
+        type: DataTypes.ENUM('Entregado', 'Envío', 'Cancelado', 'Devuelto'),
+        allowNull: false,
+        defaultValue: 'Envío'
     }
 }, {
     tableName: 'Venta_Producto',

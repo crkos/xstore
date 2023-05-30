@@ -5,6 +5,7 @@ const Producto = require('./producto');
 const Cliente = require('./cliente');
 const VentaProducto = require('./ventaproducto');
 
+//Modelo de la tabla Venta en la base de datos
 const Venta = sequelize.define('Venta', {
     clave_venta: {
         type: DataTypes.UUID,

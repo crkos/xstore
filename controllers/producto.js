@@ -1,5 +1,6 @@
 const Producto = require('../models/producto');
 const Departamento = require('../models/departamento');
+const Sucursal = require('../models/sucursal');
 
 const {sendError, uploadImageToCloud} = require('../utils/helper');
 const cloudinary = require("../cloud");
@@ -8,6 +9,9 @@ const {Op} = require("sequelize");
 exports.createProducto = async (req, res) => {
     const { nombre_producto, descripcion, precio, existencia, departamentoId, proveedorId } = req.body;
     const { file } = req;
+    const { user } = req;
+
+    const { clave_sucursal } = user;
 
 
     const oldProducto = await Producto.findOne({ where: {nombre_producto: nombre_producto} });
@@ -21,6 +25,7 @@ exports.createProducto = async (req, res) => {
         existencia: existencia,
         clave_departamento: departamentoId,
         clave_proveedor: proveedorId,
+        clave_sucursal: clave_sucursal
     });
 
     if(file){
@@ -93,7 +98,21 @@ exports.deleteProducto = async (req, res) => {
 }
 
 exports.getProductos = async (req, res) => {
-    const productos = await Producto.findAll({include: Departamento});
+    const productos = await Producto.findAll({include: [Departamento, Sucursal]});
+
+    res.json({productos: productos});
+}
+
+exports.getProductoBySucursal = async (req, res) => {
+    const { user } = req;
+
+    let productos = [];
+
+    if(user.funcion.funcion === 'Administrador'){
+        productos = await Producto.findAll({include: [Departamento, Sucursal]});
+    } else if (user.funcion.funcion === 'Gerente'){
+        productos = await Producto.findAll({where: {clave_sucursal: user.Sucursal.clave_sucursal}, include: [Departamento, Sucursal]});
+    }
 
     res.json({productos: productos});
 }

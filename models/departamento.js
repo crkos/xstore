@@ -1,6 +1,7 @@
 const sequelize = require('../db/db');
 const { DataTypes } = require('sequelize');
 
+//Modelo de la tabla Departamento en la base de datos
 const Departamento = sequelize.define('Departamento', {
     clave_departamento: {
         type: DataTypes.UUID,

@@ -35,4 +35,7 @@ exports.validatePersonal = [
     check('telefono', 'El teléfono es obligatorio').not().isEmpty().isMobilePhone('es-MX'),
     check('correo_electronico', 'El correo electrónico es obligatorio').not().isEmpty().normalizeEmail().isEmail(),
     check('turno', 'El turno es obligatorio').not().isEmpty().isString().isIn(['Matutino', 'Vespertino']),
+    check('sucursal', 'La sucursal es obligatoria').not().isEmpty().isString(),
+    check('funcion', 'La función es obligatoria').not().isEmpty().isString(),
+    check('contrasena', 'La contraseña es obligatoria').not().isEmpty().isString().isLength({ min: 8 }),
 ]

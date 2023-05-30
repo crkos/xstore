@@ -3,29 +3,31 @@ const Sucursal = require('../models/sucursal');
 const Funcion = require('../models/funcion');
 const {sendError} = require("../utils/helper");
 const {Op} = require("sequelize");
+const {generateToken} = require("../utils/jwt");
 
 exports.createPersonal = async (req, res) => {
-    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno, sucursal, funcion} = req.body;
+    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno, sucursal, funcion, contrasena} = req.body;
 
 
     const oldPersonal = await Personal.findOne({ where: {
-        [Op.or]: [{curp: curp}, {rfc: rfc}, {correo_electronico: correo_electronico}]
+        [Op.or]: [{curp: curp.toUpperCase()}, {rfc: rfc.toUpperCase()}, {correo_electronico: correo_electronico}]
         } });
 
-    if(oldPersonal) return sendError(res, 'Ya hay un personal con este CURP, RFC o correo electrónico');
+    if(oldPersonal) return sendError(res, 'Ya hay un personal con este CURP, RFC o correo electrónico',200);
 
     const nuevoPersonal = await Personal.create({
-        nombre: nombre,
-        apellido_paterno: apellidoPaterno,
-        apellido_materno: apellidoMaterno,
-        curp: curp,
-        rfc: rfc,
+        nombre: nombre.toUpperCase(),
+        apellido_paterno: apellidoPaterno.toUpperCase(),
+        apellido_materno: apellidoMaterno.toUpperCase(),
+        curp: curp.toUpperCase(),
+        rfc: rfc.toUpperCase(),
         direccion: direccion,
         telefono: telefono,
         correo_electronico: correo_electronico,
         turno: turno,
         clave_sucursal: sucursal,
         clave_funcion: funcion,
+        contrasena: contrasena
     });
 
     res.json({message: "Se ha creado el personal exitosamente"});
@@ -33,7 +35,7 @@ exports.createPersonal = async (req, res) => {
 }
 
 exports.updatePersonal = async (req, res) => {
-    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno} = req.body;
+    const {nombre, apellidoPaterno, apellidoMaterno, curp, rfc, direccion, telefono, correo_electronico, turno, contrasena} = req.body;
     const { sucursal, funcion } = req.query;
 
     const {personalId} = req.params;
@@ -53,6 +55,7 @@ exports.updatePersonal = async (req, res) => {
     personal.turno = turno;
     personal.clave_sucursal = sucursal;
     personal.clave_funcion = funcion;
+    personal.contrasena = contrasena;
 
     await personal.save();
 
@@ -107,7 +110,62 @@ exports.getPersonal = async (req, res) => {
 }
 
 exports.getAllPersonal = async (req, res) => {
+    const { user } = req;
+
+
+
+    let users = [];
+
+    if (user.funcion.funcion === 'Administrador') {
+         users = await Personal.findAll({
+            include: [Sucursal, Funcion]
+        });
+    } else if (user.funcion.funcion === 'Gerente') {
+        users = await Personal.findAll({
+            where: {
+                clave_sucursal: user.Sucursal.clave_sucursal
+            },
+            include: [Sucursal, Funcion]
+        });
+    }
+
+
+
+
+    const personal = users.map(personal => {
+        return {
+            id: personal.clave_personal,
+            nombre: personal.nombre,
+            apellido_paterno: personal.apellido_paterno,
+            apellido_materno: personal.apellido_materno,
+            curp: personal.curp,
+            rfc: personal.rfc,
+            direccion: personal.direccion,
+            telefono: personal.telefono,
+            correo_electronico: personal.correo_electronico,
+            turno: personal.turno,
+            ano_ingreso: personal.ano_ingreso,
+            sucursal: {
+                id: personal.Sucursal.clave_sucursal,
+                nombre: personal.Sucursal.nombre_sucursal,
+            },
+            funcion: {
+                id: personal.funcion.clave_funcion,
+                nombre: personal.funcion.funcion,
+            }
+        }
+    });
+
+    res.json({personal});
+}
+
+exports.getPersonalBySucursal = async (req, res) => {
+    const { sucursalId } = req.params;
+
     const users = await Personal.findAll({
+        where: {
+            clave_sucursal: sucursalId
+        },
         include: [Sucursal, Funcion]
     });
 
@@ -137,3 +195,26 @@ exports.getAllPersonal = async (req, res) => {
 
     res.json({personal});
 }
+
+exports.loginPersonal = async (req, res) => {
+    const { correo, contrasena } = req.body;
+
+
+    const personal = await Personal.findOne({ where: {correo_electronico: correo}, include: Funcion });
+
+    if(!personal) return sendError(res, 'Correo o contraseña incorrectos');
+
+    const matched = await personal.comparePassword(contrasena);
+
+    if (!matched) return sendError(res, 'Correo o contraseña incorrectos');
+
+    const jwtToken = await generateToken(personal.clave_personal);
+
+    const {clave_cliente, nombre, funcion} = personal;
+
+    const role = funcion.funcion;
+
+    res.json({user: {clave_cliente, nombre, role, token: jwtToken}, message: "Se ha iniciado sesión exitosamente"});
+
+}
+

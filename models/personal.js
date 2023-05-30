@@ -2,7 +2,9 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
 const Funcion = require('./funcion');
 const Sucursal = require('./sucursal');
+const {hashSync, compare} = require("bcrypt");
 
+//Modelo de la tabla Personal en la base de datos
 const Personal = sequelize.define('Personal', {
     clave_personal: {
         type: DataTypes.UUID,
@@ -57,11 +59,23 @@ const Personal = sequelize.define('Personal', {
         type: DataTypes.DATE,
         allowNull: true,
         defaultValue: new Date()
+    },
+    contrasena: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        set(value) {
+            this.setDataValue('contrasena', hashSync(value, 10));
+        }
     }
 }, {
     tableName: 'Personal',
     timestamps: false,
 });
+
+//Compara la contraseña ingresada con la contraseña encriptada
+Personal.prototype.comparePassword = async function(password) {
+    return await compare(password, this.contrasena);
+}
 
 // Relaciones de la tabla Personal y sucursal
 Personal.belongsTo(Sucursal, { foreignKey: 'clave_sucursal', onDelete: 'CASCADE', onUpdate: 'CASCADE' });

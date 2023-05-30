@@ -1,5 +1,7 @@
 const Funcion = require('../models/funcion');
 const Cliente = require("../models/cliente");
+const Personal = require("../models/personal");
+const Sucursal = require("../models/sucursal");
 const { sendError } = require("../utils/helper");
 const { verifyToken } = require("../utils/jwt");
 
@@ -18,10 +20,18 @@ exports.isAuth = async (req, res, next) => {
     const decode = await verifyToken(jwtToken).catch(_ => sendError(res, 'Sesión Expirada, Vuelva a iniciar sesión'));
     if(!decode) return;
     const {clave_cliente} = decode;
-    const user = await Cliente.findByPk(clave_cliente, {include: Funcion});
-    if(!user) return sendError(res, 'Usuario no encontrado', 401);
+    const clave_personal = clave_cliente;
 
-    req.user = user;
+    const user = await Cliente.findByPk(clave_cliente, {include: Funcion});
+    const personal = await Personal.findByPk(clave_personal, {
+        include: [Sucursal, Funcion]
+    });
+    if(!user && !personal) return sendError(res, 'Usuario no encontrado', 401);
+
+
+    if(user) req.user = user;
+    if(personal) req.user = personal;
+
 
     next();
 }
@@ -38,7 +48,7 @@ exports.isAuthorized = (req, res, next) => {
 
     const { funcion } = user;
 
-    if(funcion.funcion !== 'Administrador') return sendError(res, "Acceso no autorizado");
+    if(funcion.funcion !== 'Administrador' && funcion.funcion !== "Gerente") return sendError(res, "Acceso no autorizado");
 
     next();
 }

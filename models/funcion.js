@@ -1,6 +1,7 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../db/db');
 
+//Modelo de la tabla Funcion en la base de datos
 const Funcion = sequelize.define('funcion', {
     clave_funcion: {
         type: DataTypes.UUID,

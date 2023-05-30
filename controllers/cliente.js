@@ -105,9 +105,10 @@ exports.getCliente = async (req, res) => {
 }
 
 exports.getClientes = async (req, res) => {
-    const clientes = await Cliente.findAll();
+    const clientes = await Cliente.findAll({include: Funcion});
 
-    res.json(clientes);
+
+    res.json({clientes});
 }
 
 exports.loginCliente = async (req, res) => {

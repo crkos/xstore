@@ -143,3 +143,79 @@ exports.searchVenta = async (req, res) => {
     res.json({ventasTotales});
 
 }
+
+exports.devolverVenta = async (req, res) => {
+    const { ventaId } = req.params;
+    const { clave_cliente } = req.user;
+
+    const venta = await Venta.findByPk(ventaId, {
+        where: {
+            clave_cliente: clave_cliente,
+        },
+    });
+
+    if (!venta) return sendError(res, 'No existe esta venta');
+
+    const productos = await ventaProducto.findAll({
+        where: {
+            clave_venta: ventaId,
+        },
+    });
+
+
+    for (const producto of productos) {
+        const modProducto = await Producto.findByPk(producto.clave_producto);
+
+        if (!modProducto) return sendError(res, 'No existe este producto');
+
+        modProducto.existencia += producto.cantidad_comprada;
+
+        await modProducto.save();
+    }
+
+    // Actualizar el estado de los productos a "Devuelto"
+    await ventaProducto.update(
+        { estado_venta: 'Devuelto' },
+        { where: { clave_venta: ventaId } }
+    );
+
+    res.json({ message: 'Se ha devuelto la venta exitosamente' });
+}
+
+exports.cancelarVenta = async (req, res) => {
+    const { ventaId } = req.params;
+    const { clave_cliente } = req.user;
+
+    const venta = await Venta.findByPk(ventaId, {
+        where: {
+            clave_cliente: clave_cliente,
+        },
+    });
+
+    if (!venta) return sendError(res, 'No existe esta venta');
+
+    const productos = await ventaProducto.findAll({
+        where: {
+            clave_venta: ventaId,
+        },
+    });
+
+
+    for (const producto of productos) {
+        const modProducto = await Producto.findByPk(producto.clave_producto);
+
+        if (!modProducto) return sendError(res, 'No existe este producto');
+
+        modProducto.existencia += producto.cantidad_comprada;
+
+        await modProducto.save();
+    }
+
+    // Actualizar el estado de los productos a "Devuelto"
+    await ventaProducto.update(
+        { estado_venta: 'Cancelado' },
+        { where: { clave_venta: ventaId } }
+    );
+
+    res.json({ message: 'Se ha cancelado la venta exitosamente' });
+}

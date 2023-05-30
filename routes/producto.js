@@ -1,4 +1,6 @@
-const { createProducto, updateProducto, deleteProducto, getProducto, getProductos, searchProducto, editCantidadProducto} = require('../controllers/producto');
+const { createProducto, updateProducto, deleteProducto, getProducto, getProductos, searchProducto, editCantidadProducto,
+    getProductoBySucursal
+} = require('../controllers/producto');
 const {uploadImage} = require("../middlewares/multer");
 const {isAuth, isAuthorized} = require("../middlewares/auth");
 
@@ -14,6 +16,8 @@ router.delete('/:productoId',isAuth, isAuthorized, deleteProducto);
 router.get('/:productoId', getProducto);
 
 router.get('/', getProductos);
+
+router.get('/productos/sucursal', isAuth, isAuthorized, getProductoBySucursal);
 
 router.get('/search/producto', searchProducto);
 

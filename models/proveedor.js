@@ -1,6 +1,7 @@
 const sequelize = require('../db/db');
 const { DataTypes } = require('sequelize');
 
+//Modelo de la tabla Proveedor en la base de datos
 const Proveedor = sequelize.define('Proveedor', {
     clave_proveedor: {
         type: DataTypes.UUID,
