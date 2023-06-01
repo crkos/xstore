@@ -50,7 +50,7 @@ const {sucursalId} = req.params;
 exports.getSucursales = async (req, res) => {
     const sucursales = await Sucursal.findAll();
 
-    res.json(sucursales);
+    res.json({sucursales});
 }
 
 exports.getSucursal = async (req, res) => {

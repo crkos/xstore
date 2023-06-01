@@ -5,7 +5,11 @@ const {Op} = require("sequelize");
 exports.createProveedor = async (req, res) => {
     const {nombre_proveedor, direccion, rfc, telefono, correo, } = req.body;
 
+
+    console.log(req.body);
+
     const oldProveedor = await Proveedor.findOne({ where: {rfc: rfc} });
+
 
     if(oldProveedor) return sendError(res, 'Ya hay un proveedor con este rfc');
 
@@ -16,6 +20,7 @@ exports.createProveedor = async (req, res) => {
         correo: correo,
         rfc: rfc,
     });
+
 
     res.json({message: "Se ha creado el proveedor exitosamente"});
 }
@@ -56,7 +61,7 @@ const {proveedorId} = req.params;
 exports.getProveedores = async (req, res) => {
     const proveedores = await Proveedor.findAll();
 
-    res.json(proveedores);
+    res.json({proveedores});
 }
 
 exports.getProveedor = async (req, res) => {
@@ -66,7 +71,7 @@ exports.getProveedor = async (req, res) => {
 
     if (!proveedor) return sendError(res, 'No existe este proveedor');
 
-    res.json(proveedor);
+    res.json({proveedor});
 
 }
 
